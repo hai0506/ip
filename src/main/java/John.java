@@ -43,10 +43,41 @@ public class John {
                     System.out.println("    " + (i + 1) + ". " + list[i]);
                 }
             }
-            else {
-                System.out.println("    added: " + prompt);
-                list[listIndex] = new Task(prompt);
+            else if(prompt.toLowerCase().startsWith("todo")) {
+                String name = prompt.substring(4).strip();
+                ToDo todo = new ToDo(name);
+                list[listIndex] = todo;
                 listIndex++;
+                System.out.println("    I've added: ");
+                System.out.println("    " + todo);
+                System.out.println("    You now have " + listIndex + " tasks.");
+            }
+            else if(prompt.toLowerCase().startsWith("deadline")) {
+                String[] split = prompt.substring(8).split("/by");
+                String name = split[0].strip();
+                String time = split[1].strip();
+                Deadline deadline = new Deadline(name, time);
+                list[listIndex] = deadline;
+                listIndex++;
+                System.out.println("    I've added: ");
+                System.out.println("    " + deadline);
+                System.out.println("    You now have " + listIndex + " tasks.");
+            }
+            else if(prompt.toLowerCase().startsWith("event")) {
+                String[] split = prompt.substring(8).split("/from");
+                String name = split[0].strip();
+                String[] time = split[1].strip().split("/to");
+                String start = time[0].strip();
+                String end = time[1].strip();
+                Event event = new Event(name, start, end);
+                list[listIndex] = event;
+                listIndex++;
+                System.out.println("    I've added: ");
+                System.out.println("    " + event);
+                System.out.println("    You now have " + listIndex + " tasks.");
+            }
+            else {
+                System.out.println("Wrong command. Please try again.");
             }
             printHLine();
             System.out.println();
