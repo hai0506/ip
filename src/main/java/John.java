@@ -48,7 +48,7 @@ public class John {
                 ToDo todo = new ToDo(name);
                 list[listIndex] = todo;
                 listIndex++;
-                System.out.println("    I've added: ");
+                System.out.println("    I've added:");
                 System.out.println("    " + todo);
                 System.out.println("    You now have " + listIndex + " tasks.");
             }
@@ -59,7 +59,7 @@ public class John {
                 Deadline deadline = new Deadline(name, time);
                 list[listIndex] = deadline;
                 listIndex++;
-                System.out.println("    I've added: ");
+                System.out.println("    I've added:");
                 System.out.println("    " + deadline);
                 System.out.println("    You now have " + listIndex + " tasks.");
             }
@@ -72,7 +72,7 @@ public class John {
                 Event event = new Event(name, start, end);
                 list[listIndex] = event;
                 listIndex++;
-                System.out.println("    I've added: ");
+                System.out.println("    I've added:");
                 System.out.println("    " + event);
                 System.out.println("    You now have " + listIndex + " tasks.");
             }
