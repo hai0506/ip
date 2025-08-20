@@ -92,6 +92,16 @@ public class John {
                             System.out.println("   You now have " + list.size() + " tasks.");
                         }
                     }
+                } else if (prompt.toLowerCase().matches("^delete\\s\\d+$")) { // delete task
+                    int index = Integer.parseInt(prompt.split(" ")[1]);
+                    if (index > list.size() || index <= 0) {
+                        throw new JohnException("   Task does not exist.");
+                    } else {
+                        System.out.println("   I've removed this task:");
+                        System.out.println("   " + list.get(index - 1));
+                        list.remove(index - 1);
+                        System.out.println("   You now have " + list.size() + " tasks.");
+                    }
                 } else { // wrong command
                     throw new JohnException("   Wrong command. Please try again.");
                 }
