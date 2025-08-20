@@ -2,6 +2,23 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class John {
+    public enum Command {
+        MARK, UNMARK, LIST, TODO, DEADLINE, EVENT, DELETE, BYE, WRONG;
+
+        public static Command getCommand(String prompt) {
+            String lower = prompt.toLowerCase();
+            if (lower.matches("^mark\\s\\d+$")) return MARK;
+            if (lower.matches("^unmark\\s\\d+$")) return UNMARK;
+            if (lower.equals("list")) return LIST;
+            if (lower.startsWith("todo")) return TODO;
+            if (lower.startsWith("deadline")) return DEADLINE;
+            if (lower.startsWith("event")) return EVENT;
+            if (lower.matches("^delete\\s\\d+$")) return DELETE;
+            if (lower.equals("bye")) return BYE;
+            return WRONG;
+        }
+    }
+
     public static void printHLine() {
         System.out.println("---------------------------------------");
     }
@@ -15,95 +32,110 @@ public class John {
         System.out.println();
         Scanner sc = new Scanner(System.in);
         String prompt = sc.nextLine();
+        Command command = Command.getCommand(prompt);
 
         // main loop
-        while(!prompt.toLowerCase().equals("bye")) {
+        while(command != Command.BYE) {
             printHLine();
-
             try {
-                if (prompt.toLowerCase().matches("^mark\\s\\d+$")) { // mark
-                    int index = Integer.parseInt(prompt.split(" ")[1]);
-                    if (index > list.size() || index <= 0) {
-                        throw new JohnException("   Task does not exist.");
-                    } else {
-                        System.out.println("   I've marked this task as done:");
-                        list.get(index - 1).mark();
-                        System.out.println("   " + list.get(index - 1));
+                switch(command) {
+                    case MARK: {
+                        int index = Integer.parseInt(prompt.split(" ")[1]);
+                        if (index > list.size() || index <= 0) {
+                            throw new JohnException("   Task does not exist.");
+                        } else {
+                            System.out.println("   I've marked this task as done:");
+                            list.get(index - 1).mark();
+                            System.out.println("   " + list.get(index - 1));
+                        }
+                        break;
                     }
-                } else if (prompt.toLowerCase().matches("^unmark\\s\\d+$")) { // unmark
-                    int index = Integer.parseInt(prompt.split(" ")[1]);
-                    if (index > list.size() || index <= 0) {
-                        throw new JohnException("   Task does not exist.");
-                    } else {
-                        System.out.println("   I've marked this task as not done yet:");
-                        list.get(index - 1).unMark();
-                        System.out.println("   " + list.get(index - 1));
+                    case UNMARK: {
+                        int index = Integer.parseInt(prompt.split(" ")[1]);
+                        if (index > list.size() || index <= 0) {
+                            throw new JohnException("   Task does not exist.");
+                        } else {
+                            System.out.println("   I've marked this task as not done yet:");
+                            list.get(index - 1).unMark();
+                            System.out.println("   " + list.get(index - 1));
+                        }
+                        break;
                     }
-                } else if (prompt.toLowerCase().equals("list")) { // list tasks
-                    for (int i = 0; i < list.size(); i++) {
-                        System.out.println("   " + (i + 1) + ". " + list.get(i));
+                    case LIST: {
+                        for (int i = 0; i < list.size(); i++) {
+                            System.out.println("   " + (i + 1) + ". " + list.get(i));
+                        }
+                        break;
                     }
-                } else if (prompt.toLowerCase().startsWith("todo")) { // create todo
-                    String name = prompt.substring(4).strip();
-                    if (name.equals("")) throw new JohnException("   The description cannot be empty.");
-                    else {
-                        ToDo todo = new ToDo(name);
-                        list.add(todo);
-                        System.out.println("   I've added:");
-                        System.out.println("   " + todo);
-                        System.out.println("   You now have " + list.size() + " tasks.");
-                    }
-                } else if (prompt.toLowerCase().startsWith("deadline")) { // create deadline
-                    if (!prompt.contains("/by")) {
-                        throw new JohnException("   Please provide the deadline.");
-                    } else {
-                        String[] split = prompt.substring(8).split("/by");
-                        String name = split[0].strip();
-                        String time = split[1].strip();
-
+                    case TODO: {
+                        String name = prompt.substring(4).strip();
                         if (name.equals("")) throw new JohnException("   The description cannot be empty.");
-                        else if (time.equals("")) throw new JohnException("   The deadline cannot be empty.");
                         else {
-                            Deadline deadline = new Deadline(name, time);
-                            list.add(deadline);
+                            ToDo todo = new ToDo(name);
+                            list.add(todo);
                             System.out.println("   I've added:");
-                            System.out.println("   " + deadline);
+                            System.out.println("   " + todo);
                             System.out.println("   You now have " + list.size() + " tasks.");
                         }
+                        break;
                     }
-                } else if (prompt.toLowerCase().startsWith("event")) { // create event
-                    if (!prompt.contains("/from") || !prompt.contains("/to")) {
-                        throw new JohnException("   Please provide start and end dates.");
-                    } else {
-                        String[] split = prompt.substring(6).split("/from");
-                        String name = split[0].strip();
-                        String[] time = split[1].split("/to");
-                        String start = time[0].strip();
-                        String end = time[1].strip();
+                    case DEADLINE: {
+                        if (!prompt.contains("/by")) {
+                            throw new JohnException("   Please provide the deadline.");
+                        } else {
+                            String[] split = prompt.substring(8).split("/by");
+                            String name = split[0].strip();
+                            String time = split[1].strip();
 
-                        if (name.equals("")) throw new JohnException("   The description cannot be empty.");
-                        else if (start.equals("") || end.equals(""))
-                            throw new JohnException("   The start and end dates cannot be empty.");
-                        else {
-                            Event event = new Event(name, start, end);
-                            list.add(event);
-                            System.out.println("   I've added:");
-                            System.out.println("   " + event);
+                            if (name.equals("")) throw new JohnException("   The description cannot be empty.");
+                            else if (time.equals("")) throw new JohnException("   The deadline cannot be empty.");
+                            else {
+                                Deadline deadline = new Deadline(name, time);
+                                list.add(deadline);
+                                System.out.println("   I've added:");
+                                System.out.println("   " + deadline);
+                                System.out.println("   You now have " + list.size() + " tasks.");
+                            }
+                        }
+                        break;
+                    }
+                    case EVENT: {
+                        if (!prompt.contains("/from") || !prompt.contains("/to")) {
+                            throw new JohnException("   Please provide start and end dates.");
+                        } else {
+                            String[] split = prompt.substring(6).split("/from");
+                            String name = split[0].strip();
+                            String[] time = split[1].split("/to");
+                            String start = time[0].strip();
+                            String end = time[1].strip();
+
+                            if (name.equals("")) throw new JohnException("   The description cannot be empty.");
+                            else if (start.equals("") || end.equals(""))
+                                throw new JohnException("   The start and end dates cannot be empty.");
+                            else {
+                                Event event = new Event(name, start, end);
+                                list.add(event);
+                                System.out.println("   I've added:");
+                                System.out.println("   " + event);
+                                System.out.println("   You now have " + list.size() + " tasks.");
+                            }
+                        }
+                        break;
+                    }
+                    case DELETE: {
+                        int index = Integer.parseInt(prompt.split(" ")[1]);
+                        if (index > list.size() || index <= 0) {
+                            throw new JohnException("   Task does not exist.");
+                        } else {
+                            System.out.println("   I've removed this task:");
+                            System.out.println("   " + list.get(index - 1));
+                            list.remove(index - 1);
                             System.out.println("   You now have " + list.size() + " tasks.");
                         }
+                        break;
                     }
-                } else if (prompt.toLowerCase().matches("^delete\\s\\d+$")) { // delete task
-                    int index = Integer.parseInt(prompt.split(" ")[1]);
-                    if (index > list.size() || index <= 0) {
-                        throw new JohnException("   Task does not exist.");
-                    } else {
-                        System.out.println("   I've removed this task:");
-                        System.out.println("   " + list.get(index - 1));
-                        list.remove(index - 1);
-                        System.out.println("   You now have " + list.size() + " tasks.");
-                    }
-                } else { // wrong command
-                    throw new JohnException("   Wrong command. Please try again.");
+                    case WRONG:
+                        throw new JohnException("   Wrong command. Please try again.");
                 }
             }
             catch(JohnException e) { // print errors
@@ -115,6 +147,7 @@ public class John {
             printHLine();
             System.out.println();
             prompt = sc.nextLine();
+            command = Command.getCommand(prompt);
         }
         // end
         printHLine();
