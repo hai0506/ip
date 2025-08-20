@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class John {
@@ -6,8 +7,7 @@ public class John {
     }
 
     public static void main(String[] args) {
-        Task[] list = new Task[100];
-        int listIndex = 0;
+        ArrayList<Task> list = new ArrayList<>();
         printHLine();
         System.out.println("   Hi I'm John.");
         System.out.println("   How can I help you?");
@@ -23,36 +23,35 @@ public class John {
             try {
                 if (prompt.toLowerCase().matches("^mark\\s\\d+$")) { // mark
                     int index = Integer.parseInt(prompt.split(" ")[1]);
-                    if (index > listIndex || index <= 0) {
+                    if (index > list.size() || index <= 0) {
                         throw new JohnException("   Task does not exist.");
                     } else {
                         System.out.println("   I've marked this task as done:");
-                        list[index - 1].mark();
-                        System.out.println("   " + list[index - 1]);
+                        list.get(index - 1).mark();
+                        System.out.println("   " + list.get(index - 1));
                     }
                 } else if (prompt.toLowerCase().matches("^unmark\\s\\d+$")) { // unmark
                     int index = Integer.parseInt(prompt.split(" ")[1]);
-                    if (index > listIndex || index <= 0) {
+                    if (index > list.size() || index <= 0) {
                         throw new JohnException("   Task does not exist.");
                     } else {
                         System.out.println("   I've marked this task as not done yet:");
-                        list[index - 1].unMark();
-                        System.out.println("   " + list[index - 1]);
+                        list.get(index - 1).unMark();
+                        System.out.println("   " + list.get(index - 1));
                     }
                 } else if (prompt.toLowerCase().equals("list")) { // list tasks
-                    for (int i = 0; i < listIndex; i++) {
-                        System.out.println("   " + (i + 1) + ". " + list[i]);
+                    for (int i = 0; i < list.size(); i++) {
+                        System.out.println("   " + (i + 1) + ". " + list.get(i));
                     }
                 } else if (prompt.toLowerCase().startsWith("todo")) { // create todo
                     String name = prompt.substring(4).strip();
                     if (name.equals("")) throw new JohnException("   The description cannot be empty.");
                     else {
                         ToDo todo = new ToDo(name);
-                        list[listIndex] = todo;
-                        listIndex++;
+                        list.add(todo);
                         System.out.println("   I've added:");
                         System.out.println("   " + todo);
-                        System.out.println("   You now have " + listIndex + " tasks.");
+                        System.out.println("   You now have " + list.size() + " tasks.");
                     }
                 } else if (prompt.toLowerCase().startsWith("deadline")) { // create deadline
                     if (!prompt.contains("/by")) {
@@ -66,11 +65,10 @@ public class John {
                         else if (time.equals("")) throw new JohnException("   The deadline cannot be empty.");
                         else {
                             Deadline deadline = new Deadline(name, time);
-                            list[listIndex] = deadline;
-                            listIndex++;
+                            list.add(deadline);
                             System.out.println("   I've added:");
                             System.out.println("   " + deadline);
-                            System.out.println("   You now have " + listIndex + " tasks.");
+                            System.out.println("   You now have " + list.size() + " tasks.");
                         }
                     }
                 } else if (prompt.toLowerCase().startsWith("event")) { // create event
@@ -88,11 +86,10 @@ public class John {
                             throw new JohnException("   The start and end dates cannot be empty.");
                         else {
                             Event event = new Event(name, start, end);
-                            list[listIndex] = event;
-                            listIndex++;
+                            list.add(event);
                             System.out.println("   I've added:");
                             System.out.println("   " + event);
-                            System.out.println("   You now have " + listIndex + " tasks.");
+                            System.out.println("   You now have " + list.size() + " tasks.");
                         }
                     }
                 } else { // wrong command
