@@ -1,71 +1,91 @@
 ---------------------------------------
-    Hi I'm John.
-    How can I help you?
+   Hi I'm John.
+   How can I help you?
 ---------------------------------------
 
 ---------------------------------------
-    I've added:
-    [T][] td
-    You now have 1 tasks.
+   The description cannot be empty.
 ---------------------------------------
 
 ---------------------------------------
-    I've marked this task as done:
-    [T][X] td
+   I've added:
+   [T][] td
+   You now have 1 tasks.
 ---------------------------------------
 
 ---------------------------------------
-    1. [T][X] td
+   I've marked this task as done:
+   [T][X] td
 ---------------------------------------
 
 ---------------------------------------
-Task does not exist.
+   1. [T][X] td
 ---------------------------------------
 
 ---------------------------------------
-    I've added:
-    [D][] dl (by: tomorrow)
-    You now have 2 tasks.
+   Task does not exist.
 ---------------------------------------
 
 ---------------------------------------
-    1. [T][X] td
-    2. [D][] dl (by: tomorrow)
+   The description cannot be empty.
 ---------------------------------------
 
 ---------------------------------------
-    I've marked this task as done:
-    [D][X] dl (by: tomorrow)
+   Please provide the required time details for this task.
 ---------------------------------------
 
 ---------------------------------------
-    I've added:
-    [E][]  (from: now, to: never)
-    You now have 3 tasks.
+   I've added:
+   [D][] dl (by: tomorrow)
+   You now have 2 tasks.
 ---------------------------------------
 
 ---------------------------------------
-    1. [T][X] td
-    2. [D][X] dl (by: tomorrow)
-    3. [E][]  (from: now, to: never)
+   1. [T][X] td
+   2. [D][] dl (by: tomorrow)
 ---------------------------------------
 
 ---------------------------------------
-    I've marked this task as not done yet:
-    [T][] td
+   I've marked this task as done:
+   [D][X] dl (by: tomorrow)
 ---------------------------------------
 
 ---------------------------------------
-    I've marked this task as not done yet:
-    [E][]  (from: now, to: never)
+   The description cannot be empty.
 ---------------------------------------
 
 ---------------------------------------
-    1. [T][] td
-    2. [D][X] dl (by: tomorrow)
-    3. [E][]  (from: now, to: never)
+   Please provide the required time details for this task.
 ---------------------------------------
 
 ---------------------------------------
-     Bye!
+   I've added:
+   [E][] ev (from: now, to: never)
+   You now have 3 tasks.
+---------------------------------------
+
+---------------------------------------
+   1. [T][X] td
+   2. [D][X] dl (by: tomorrow)
+   3. [E][] ev (from: now, to: never)
+---------------------------------------
+
+---------------------------------------
+   I've marked this task as not done yet:
+   [T][] td
+---------------------------------------
+
+---------------------------------------
+   I've marked this task as not done yet:
+   [E][] ev (from: now, to: never)
+---------------------------------------
+
+---------------------------------------
+   1. [T][] td
+   2. [D][X] dl (by: tomorrow)
+   3. [E][] ev (from: now, to: never)
+---------------------------------------
+
+---------------------------------------
+   Bye!
 ---------------------------------------
