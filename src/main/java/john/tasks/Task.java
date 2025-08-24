@@ -1,3 +1,5 @@
+package john.tasks;
+
 public abstract class Task {
     private String name;
     private boolean done;
