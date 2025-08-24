@@ -5,13 +5,18 @@ import john.tasks.Event;
 import john.tasks.Task;
 import john.tasks.ToDo;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class John {
+    private static final String FILEPATH = "data/tasks.txt";
+
     public enum Command {
         MARK, UNMARK, LIST, TODO, DEADLINE, EVENT, DELETE, BYE, WRONG;
-
         public static Command getCommand(String prompt) {
             String lower = prompt.toLowerCase();
             if (lower.matches("^mark\\s\\d+$")) {
@@ -48,6 +53,41 @@ public class John {
 
     public static void main(String[] args) {
         ArrayList<Task> list = new ArrayList<>();
+
+        // load file
+        File dataFile = new File(FILEPATH);
+        if (!dataFile.getParentFile().exists()) {
+            dataFile.getParentFile().mkdirs();
+        }
+        if (!dataFile.exists()) {
+            try {
+                dataFile.createNewFile();
+            } catch (IOException e) {
+                System.out.println("Could not create data file.");
+            }
+        } else {
+            try {
+                Scanner fileReader = new Scanner(dataFile);
+                while (fileReader.hasNext()) {
+                    String[] data = fileReader.nextLine().split(" \\| ");
+                    switch (data[0]) {
+                    case "T":
+                        list.add(new ToDo(data[2], data[1].equals("1")));
+                        break;
+                    case "D":
+                        list.add(new Deadline(data[2], data[3], data[1].equals("1")));
+                        break;
+                    case "E":
+                        list.add(new Event(data[2], data[3], data[4], data[1].equals("1")));
+                        break;
+                    }
+                }
+                fileReader.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found.");
+            }
+        }
+
         printHLine();
         System.out.println("   Hi I'm John.");
         System.out.println("   How can I help you?");
@@ -58,10 +98,10 @@ public class John {
         Command command = Command.getCommand(prompt);
 
         // main loop
-        while(command != Command.BYE) {
+        while (command != Command.BYE) {
             printHLine();
             try {
-                switch(command) {
+                switch (command) {
                 case MARK: {
                     int index = Integer.parseInt(prompt.split(" ")[1]);
                     if (index > list.size() || index <= 0) {
@@ -165,10 +205,10 @@ public class John {
                     throw new JohnException("   Wrong command. Please try again.");
                 }
             }
-            catch(JohnException e) { // print errors
+            catch (JohnException e) { // print errors
                 System.out.println(e.getMessage());
             }
-            catch(IndexOutOfBoundsException e) { // when no time is provided after /by or /to
+            catch (IndexOutOfBoundsException e) { // when no time is provided after /by or /to
                 System.out.println("   Please provide the required time details for this task.");
             }
             printHLine();
@@ -180,5 +220,16 @@ public class John {
         printHLine();
         System.out.println("   Bye!");
         printHLine();
+
+        // save tasks
+        try {
+            FileWriter fileWriter = new FileWriter(FILEPATH);
+            for(Task task : list) {
+                fileWriter.write(task.writeString() + "\n");
+            }
+            fileWriter.close();
+        } catch (IOException e) {
+            System.out.println("Unable to write to file.");
+        }
     }
 }

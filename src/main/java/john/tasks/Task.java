@@ -7,6 +7,11 @@ public abstract class Task {
         this.name = name;
         this.done = false;
     }
+    public Task(String name, boolean done) {
+        this.name = name;
+        this.done = done;
+    }
+
     public void mark() {
         this.done = true;
     }
@@ -16,7 +21,13 @@ public abstract class Task {
 
     @Override
     public String toString() {
-        if(this.done) return "[X] " + name;
+        if(this.done) {
+            return "[X] " + name;
+        }
         return "[] " + name;
+    }
+    public String writeString() {
+        int doneInt = done ? 1 : 0;
+        return doneInt + " | " + name;
     }
 }
