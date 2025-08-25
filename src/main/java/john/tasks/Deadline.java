@@ -1,22 +1,27 @@
 package john.tasks;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class Deadline extends Task {
-    private String deadline;
-    public Deadline(String name, String deadline) {
+    private LocalDate deadline;
+    public Deadline(String name, LocalDate deadline) {
         super(name);
         this.deadline = deadline;
     }
-    public Deadline(String name, String deadline, boolean done) {
+    public Deadline(String name, LocalDate deadline, boolean done) {
         super(name, done);
         this.deadline = deadline;
     }
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + deadline + ")";
+        return "[D]" + super.toString() + " (by: " +
+                this.deadline.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ")";
     }
     @Override
     public String writeString() {
-        return "D | " + super.writeString() + " | " + this.deadline;
+        return "D | " + super.writeString() + " | " +
+                this.deadline.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 }

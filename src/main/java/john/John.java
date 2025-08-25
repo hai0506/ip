@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -70,16 +72,21 @@ public class John {
                 Scanner fileReader = new Scanner(dataFile);
                 while (fileReader.hasNext()) {
                     String[] data = fileReader.nextLine().split(" \\| ");
-                    switch (data[0]) {
-                    case "T":
-                        list.add(new ToDo(data[2], data[1].equals("1")));
-                        break;
-                    case "D":
-                        list.add(new Deadline(data[2], data[3], data[1].equals("1")));
-                        break;
-                    case "E":
-                        list.add(new Event(data[2], data[3], data[4], data[1].equals("1")));
-                        break;
+                    try {
+                        switch (data[0]) {
+                            case "T":
+                                list.add(new ToDo(data[2], data[1].equals("1")));
+                                break;
+                            case "D":
+                                list.add(new Deadline(data[2], LocalDate.parse(data[3]), data[1].equals("1")));
+                                break;
+                            case "E":
+                                list.add(new Event(data[2], LocalDate.parse(data[3]),
+                                        LocalDate.parse(data[4]), data[1].equals("1")));
+                                break;
+                        }
+                    } catch(DateTimeParseException e) {
+                        System.out.println("Unable to parse date from save file.");
                     }
                 }
                 fileReader.close();
@@ -156,7 +163,7 @@ public class John {
                         } else if (time.equals("")) {
                             throw new JohnException("   The deadline cannot be empty.");
                         } else {
-                            Deadline deadline = new Deadline(name, time);
+                            Deadline deadline = new Deadline(name, LocalDate.parse(time));
                             list.add(deadline);
                             System.out.println("   I've added:");
                             System.out.println("   " + deadline);
@@ -180,7 +187,7 @@ public class John {
                         } else if (start.equals("") || end.equals("")) {
                             throw new JohnException("   The start and end dates cannot be empty.");
                         } else {
-                            Event event = new Event(name, start, end);
+                            Event event = new Event(name, LocalDate.parse(start), LocalDate.parse(end));
                             list.add(event);
                             System.out.println("   I've added:");
                             System.out.println("   " + event);
@@ -210,6 +217,9 @@ public class John {
             }
             catch (IndexOutOfBoundsException e) { // when no time is provided after /by or /to
                 System.out.println("   Please provide the required time details for this task.");
+            }
+            catch (DateTimeParseException e) {
+                System.out.println("Unable to parse the date. Please use format yyyy-mm-dd");
             }
             printHLine();
             System.out.println();
