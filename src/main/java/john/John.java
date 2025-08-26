@@ -21,38 +21,6 @@ public class John {
 
     private static final String FILEPATH = "data/tasks.txt";
 
-    public enum Command {
-        MARK, UNMARK, LIST, TODO, DEADLINE, EVENT, DELETE, BYE, WRONG;
-        public static Command getCommand(String prompt) {
-            String lower = prompt.toLowerCase();
-            if (lower.matches("^mark\\s\\d+$")) {
-                return MARK;
-            }
-            if (lower.matches("^unmark\\s\\d+$")) {
-                return UNMARK;
-            }
-            if (lower.equals("list")) {
-                return LIST;
-            }
-            if (lower.startsWith("todo")) {
-                return TODO;
-            }
-            if (lower.startsWith("deadline")) {
-                return DEADLINE;
-            }
-            if (lower.startsWith("event")) {
-                return EVENT;
-            }
-            if (lower.matches("^delete\\s\\d+$")) {
-                return DELETE;
-            }
-            if (lower.equals("bye")) {
-                return BYE;
-            }
-            return WRONG;
-        }
-    }
-
     public static void printHLine() {
         System.out.println("---------------------------------------");
     }
@@ -106,7 +74,7 @@ public class John {
         System.out.println();
         Scanner sc = new Scanner(System.in);
         String prompt = sc.nextLine();
-        Command command = Command.getCommand(prompt);
+        Command command = Parser.parseCommand(prompt);
 
         // main loop
         while (command != Command.BYE) {
@@ -228,7 +196,7 @@ public class John {
             printHLine();
             System.out.println();
             prompt = sc.nextLine();
-            command = Command.getCommand(prompt);
+            command = Parser.parseCommand(prompt);
         }
         // end
         printHLine();
