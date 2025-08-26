@@ -31,17 +31,17 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " +
-                this.start.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ", to: " +
-                this.end.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ")";
+        return "[E]" + super.toString() + " (from: "
+                + this.start.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ", to: "
+                + this.end.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ")";
     }
     /**
      * String representation of the event for saving in the save file.
      */
     @Override
     public String writeString() {
-        return "E | " + super.writeString() + " | " +
-                this.start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " | " +
-                this.end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        return "E | " + super.writeString() + " | "
+                + this.start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " | "
+                + this.end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 }

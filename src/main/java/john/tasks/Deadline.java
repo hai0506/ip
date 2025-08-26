@@ -27,15 +27,15 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " +
-                this.deadline.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ")";
+        return "[D]" + super.toString() + " (by: "
+                + this.deadline.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ")";
     }
     /**
      * String representation of the deadline for saving in the save file.
      */
     @Override
     public String writeString() {
-        return "D | " + super.writeString() + " | " +
-                this.deadline.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        return "D | " + super.writeString() + " | "
+                + this.deadline.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 }
