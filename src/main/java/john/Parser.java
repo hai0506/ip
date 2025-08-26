@@ -12,13 +12,13 @@ public class Parser {
         if (lower.equals("list")) {
             return Command.LIST;
         }
-        if (lower.startsWith("todo")) {
+        if (lower.matches("^todo( |$).*")) {
             return Command.TODO;
         }
-        if (lower.startsWith("deadline")) {
+        if (lower.matches("^deadline( |$).*")) {
             return Command.DEADLINE;
         }
-        if (lower.startsWith("event")) {
+        if (lower.matches("^event( |$).*")) {
             return Command.EVENT;
         }
         if (lower.matches("^delete\\s\\d+$")) {
