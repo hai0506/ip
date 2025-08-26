@@ -15,58 +15,26 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class John {
+    private Storage storage;
+    private TaskList list;
+    private Ui ui;
+
     public John(String filePath) {
-
+        ui = new Ui();
+        storage = new Storage(filePath);
+        try {
+            list = storage.load();
+        } catch (JohnException e) {
+            this.ui.displayJohnException(e);
+            list = new TaskList();
+        }
     }
-
-    private static final String FILEPATH = "data/tasks.txt";
 
     public static void printHLine() {
         System.out.println("---------------------------------------");
     }
 
     public void run() {
-        ArrayList<Task> list = new ArrayList<>();
-
-        // load file
-        File dataFile = new File(FILEPATH);
-        if (!dataFile.getParentFile().exists()) {
-            dataFile.getParentFile().mkdirs();
-        }
-        if (!dataFile.exists()) {
-            try {
-                dataFile.createNewFile();
-            } catch (IOException e) {
-                System.out.println("Could not create data file.");
-            }
-        } else {
-            try {
-                Scanner fileReader = new Scanner(dataFile);
-                while (fileReader.hasNext()) {
-                    String[] data = fileReader.nextLine().split(" \\| ");
-                    try {
-                        switch (data[0]) {
-                            case "T":
-                                list.add(new ToDo(data[2], data[1].equals("1")));
-                                break;
-                            case "D":
-                                list.add(new Deadline(data[2], LocalDate.parse(data[3]), data[1].equals("1")));
-                                break;
-                            case "E":
-                                list.add(new Event(data[2], LocalDate.parse(data[3]),
-                                        LocalDate.parse(data[4]), data[1].equals("1")));
-                                break;
-                        }
-                    } catch(DateTimeParseException e) {
-                        System.out.println("Unable to parse date from save file.");
-                    }
-                }
-                fileReader.close();
-            } catch (FileNotFoundException e) {
-                System.out.println("File not found.");
-            }
-        }
-
         printHLine();
         System.out.println("   Hi I'm John.");
         System.out.println("   How can I help you?");
@@ -87,8 +55,8 @@ public class John {
                         throw new JohnException("   Task does not exist.");
                     } else {
                         System.out.println("   I've marked this task as done:");
-                        list.get(index - 1).mark();
-                        System.out.println("   " + list.get(index - 1));
+                        list.get(index).mark();
+                        System.out.println("   " + list.get(index));
                     }
                     break;
                 }
@@ -98,14 +66,14 @@ public class John {
                         throw new JohnException("   Task does not exist.");
                     } else {
                         System.out.println("   I've marked this task as not done yet:");
-                        list.get(index - 1).unMark();
-                        System.out.println("   " + list.get(index - 1));
+                        list.get(index).unMark();
+                        System.out.println("   " + list.get(index));
                     }
                     break;
                 }
                 case LIST: {
-                    for (int i = 0; i < list.size(); i++) {
-                        System.out.println("   " + (i + 1) + ". " + list.get(i));
+                    for (int i = 1; i <= list.size(); i++) {
+                        System.out.println("   " + i + ". " + list.get(i));
                     }
                     break;
                 }
@@ -115,7 +83,7 @@ public class John {
                         throw new JohnException("   The description cannot be empty.");
                     } else {
                         ToDo todo = new ToDo(name);
-                        list.add(todo);
+                        list.addTask(todo);
                         System.out.println("   I've added:");
                         System.out.println("   " + todo);
                         System.out.println("   You now have " + list.size() + " tasks.");
@@ -136,7 +104,7 @@ public class John {
                             throw new JohnException("   The deadline cannot be empty.");
                         } else {
                             Deadline deadline = new Deadline(name, LocalDate.parse(time));
-                            list.add(deadline);
+                            list.addTask(deadline);
                             System.out.println("   I've added:");
                             System.out.println("   " + deadline);
                             System.out.println("   You now have " + list.size() + " tasks.");
@@ -160,7 +128,7 @@ public class John {
                             throw new JohnException("   The start and end dates cannot be empty.");
                         } else {
                             Event event = new Event(name, LocalDate.parse(start), LocalDate.parse(end));
-                            list.add(event);
+                            list.addTask(event);
                             System.out.println("   I've added:");
                             System.out.println("   " + event);
                             System.out.println("   You now have " + list.size() + " tasks.");
@@ -174,8 +142,8 @@ public class John {
                         throw new JohnException("   Task does not exist.");
                     } else {
                         System.out.println("   I've removed this task:");
-                        System.out.println("   " + list.get(index - 1));
-                        list.remove(index - 1);
+                        System.out.println("   " + list.get(index));
+                        list.deleteTask(index);
                         System.out.println("   You now have " + list.size() + " tasks.");
                     }
                     break;
@@ -205,13 +173,9 @@ public class John {
 
         // save tasks
         try {
-            FileWriter fileWriter = new FileWriter(FILEPATH);
-            for(Task task : list) {
-                fileWriter.write(task.writeString() + "\n");
-            }
-            fileWriter.close();
-        } catch (IOException e) {
-            System.out.println("Unable to write to file.");
+            this.storage.save(this.list);
+        } catch (JohnException e) {
+            this.ui.displayJohnException(e);
         }
     }
     public static void main(String[] args) {
