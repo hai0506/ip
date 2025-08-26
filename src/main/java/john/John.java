@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class John {
+    public John(String filePath) {
+
+    }
+
     private static final String FILEPATH = "data/tasks.txt";
 
     public enum Command {
@@ -53,7 +57,7 @@ public class John {
         System.out.println("---------------------------------------");
     }
 
-    public static void main(String[] args) {
+    public void run() {
         ArrayList<Task> list = new ArrayList<>();
 
         // load file
@@ -241,5 +245,8 @@ public class John {
         } catch (IOException e) {
             System.out.println("Unable to write to file.");
         }
+    }
+    public static void main(String[] args) {
+        new John("data/tasks.txt").run();
     }
 }
