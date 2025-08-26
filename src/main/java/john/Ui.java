@@ -2,10 +2,19 @@ package john;
 
 import john.tasks.Task;
 
+/**
+ * Class for handling text displays for the chatbot.
+ */
 public class Ui {
+    /**
+     * Prints a horizontal line.
+     */
     private static void printHLine() {
         System.out.println("---------------------------------------");
     }
+    /**
+     * Greets the user on program start.
+     */
     public void startUp() {
         printHLine();
         System.out.println("   Hi I'm John.");
@@ -13,11 +22,17 @@ public class Ui {
         printHLine();
         System.out.println();
     }
+    /**
+     * Say goodbye to the user on program end.
+     */
     public void endProgram() {
         printHLine();
         System.out.println("   Bye!");
         printHLine();
     }
+    /**
+     * Displays the output of marking a task as done.
+     */
     public void markTask(Task task) {
         printHLine();
         System.out.println("   I've marked this task as done:");
@@ -25,6 +40,9 @@ public class Ui {
         printHLine();
         System.out.println();
     }
+    /**
+     * Displays the output of unmarking a task as done.
+     */
     public void unMarkTask(Task task) {
         printHLine();
         System.out.println("   I've marked this task as not done yet:");
@@ -32,6 +50,9 @@ public class Ui {
         printHLine();
         System.out.println();
     }
+    /**
+     * List the current tasks in the list.
+     */
     public void listTasks(TaskList list) {
         printHLine();
         if (list.size() == 0) {
@@ -43,6 +64,9 @@ public class Ui {
         printHLine();
         System.out.println();
     }
+    /**
+     * Displays the output of adding a task to the list.
+     */
     public void addTask(Task task, TaskList list) {
         printHLine();
         System.out.println("   I've added:");
@@ -51,6 +75,9 @@ public class Ui {
         printHLine();
         System.out.println();
     }
+    /**
+     * Displays the output of removing a task from the list.
+     */
     public void deleteTask(Task task, TaskList list) {
         printHLine();
         System.out.println("   I've removed this task:");
@@ -59,6 +86,9 @@ public class Ui {
         printHLine();
         System.out.println();
     }
+    /**
+     * Displays error messages.
+     */
     public void displayJohnException(JohnException e) {
         printHLine();
         System.out.println("   " + e.getMessage());

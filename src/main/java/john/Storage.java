@@ -12,12 +12,21 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
+/**
+ * A storage that loads and saves the task list data to a file.
+ */
 public class Storage {
     private String filePath;
+    /**
+     * Constructor for storage.
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Loads the data from save file into a TaskList.
+     */
     public TaskList load() throws JohnException {
         TaskList list = new TaskList();
         File dataFile = new File(this.filePath);
@@ -63,6 +72,9 @@ public class Storage {
         return list;
     }
 
+    /**
+     * Saves the data from the TaskList to the save file.
+     */
     public void save(TaskList list) throws JohnException {
         try {
             FileWriter fileWriter = new FileWriter(this.filePath);
