@@ -8,11 +8,17 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
+/**
+ * The John chatbot task manager.
+ */
 public class John {
     private Storage storage;
     private TaskList list;
     private Ui ui;
 
+    /**
+     * Constructor for John.
+     */
     public John(String filePath) {
         ui = new Ui();
         storage = new Storage(filePath);
@@ -24,6 +30,9 @@ public class John {
         }
     }
 
+    /**
+     * Main program where the chatbot runs.
+     */
     public void run() {
         this.ui.startUp();
         Scanner sc = new Scanner(System.in);

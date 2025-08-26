@@ -1,6 +1,12 @@
 package john;
 
+/**
+ * A class to parse user inputs.
+ */
 public class Parser {
+    /**
+     * Parses a user input and returns the correct command.
+     */
     public static Command parseCommand(String prompt) {
         String lower = prompt.toLowerCase();
         if (lower.matches("^mark\\s\\d+$")) {
