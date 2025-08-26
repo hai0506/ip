@@ -2,6 +2,8 @@ package john;
 
 import john.tasks.Task;
 
+import java.util.ArrayList;
+
 public class Ui {
     private static void printHLine() {
         System.out.println("---------------------------------------");
@@ -35,7 +37,7 @@ public class Ui {
     public void listTasks(TaskList list) {
         printHLine();
         if (list.size() == 0) {
-            System.out.println("You currently have no tasks. Try adding a task.");
+            System.out.println("   You currently have no tasks. Try adding a task.");
         }
         for (int i = 1; i <= list.size(); i++) {
             System.out.println("   " + i + ". " + list.get(i));
@@ -56,6 +58,26 @@ public class Ui {
         System.out.println("   I've removed this task:");
         System.out.println("   " + task);
         System.out.println("   You now have " + list.size() + " tasks.");
+        printHLine();
+        System.out.println();
+    }
+    /**
+     * Display the list of tasks that matches the search.
+     */
+    public void findTasks(ArrayList<Integer> indices, TaskList list) {
+        printHLine();
+        if (list.size() == 0) {
+            System.out.println("   You currently have no tasks. Try adding a task.");
+        }
+        else if (indices.size() == 0) {
+            System.out.println("   There are no tasks matching your search.");
+        }
+        else {
+            System.out.println("   Here are the matching tasks in your list:");
+            for (int i : indices) {
+                System.out.println("   " + i + ". " + list.get(i));
+            }
+        }
         printHLine();
         System.out.println();
     }

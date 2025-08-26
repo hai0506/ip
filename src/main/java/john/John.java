@@ -120,13 +120,21 @@ public class John {
                         }
                         break;
                     }
+                    case FIND: {
+                        String keyword = prompt.substring(4).strip();
+                        if (keyword.equals("")) {
+                            throw new JohnException("Please provide the search term.");
+                        }
+                        this.ui.findTasks(this.list.search(keyword), this.list);
+                        break;
+                    }
                     case WRONG:
                         throw new JohnException("Wrong command. Please try again.");
                 }
             } catch (JohnException e) { // print errors
                 this.ui.displayJohnException(e);
             } catch (IndexOutOfBoundsException e) { // when no time is provided after /by or /to
-                this.ui.displayJohnException(new JohnException("Please provide the required time details for this task."));
+                this.ui.displayJohnException(new JohnException("Please provide the required details for this task."));
             } catch (DateTimeParseException e) {
                 this.ui.displayJohnException(new JohnException("Unable to parse the date. Please use format yyyy-mm-dd"));
             }

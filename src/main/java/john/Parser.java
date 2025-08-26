@@ -24,6 +24,9 @@ public class Parser {
         if (lower.matches("^delete\\s\\d+$")) {
             return Command.DELETE;
         }
+        if (lower.matches("^find( |$).*")) {
+            return Command.FIND;
+        }
         if (lower.equals("bye")) {
             return Command.BYE;
         }

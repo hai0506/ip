@@ -24,4 +24,16 @@ public class TaskList {
     public int size() {
         return this.list.size();
     }
+    /**
+     * Returns an ArrayList of the indices of all tasks whose name contains the keyword.
+     */
+    public ArrayList<Integer> search(String keyword) {
+        ArrayList<Integer> res = new ArrayList<Integer>();
+        for (int i = 1; i <= this.size(); i++) {
+            if (this.get(i).nameContains(keyword)) {
+                res.add(i);
+            }
+        }
+        return res;
+    }
 }

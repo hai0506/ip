@@ -19,6 +19,13 @@ public abstract class Task {
         this.done = false;
     }
 
+    /**
+     * Check whether the keyword is in the task name.
+     */
+    public boolean nameContains(String keyword) {
+        return this.name.contains(keyword);
+    }
+
     @Override
     public String toString() {
         if(this.done) {
