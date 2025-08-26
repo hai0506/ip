@@ -13,8 +13,10 @@ public class TaskList {
     public void addTask(Task task) {
         list.add(task);
     }
-    public void deleteTask(int taskIndex) {
+    public Task deleteTask(int taskIndex) {
+        Task task = list.get(taskIndex - 1);
         list.remove(taskIndex - 1);
+        return task;
     }
     public Task get(int index) {
         return this.list.get(index - 1);
