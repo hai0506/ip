@@ -35,6 +35,13 @@ public abstract class Task {
     }
 
     /**
+     * Check whether the keyword is in the task name.
+     */
+    public boolean nameContains(String keyword) {
+        return this.name.contains(keyword);
+    }
+
+    /**
      * String representation of the task for displaying to user.
      */
     @Override
