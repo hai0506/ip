@@ -1,14 +1,16 @@
 package john;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
-
+/**
+ * Main class that runs the program.
+ */
 public class Main extends Application {
     private John john = new John("data/tasks.txt");
 
@@ -19,7 +21,7 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
-            fxmlLoader.<MainWindow>getController().setJohn(john);  // inject the Duke instance
+            fxmlLoader.<MainWindow>getController().setJohn(john); // inject the Duke instance
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

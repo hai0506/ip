@@ -1,7 +1,8 @@
 package john;
 
-import john.tasks.Task;
 import java.util.ArrayList;
+
+import john.tasks.Task;
 
 /**
  * Class for handling text displays for the chatbot.
@@ -11,7 +12,7 @@ public class Ui {
      * Greets the user on program start.
      */
     public String greet() {
-        return("Hi I'm John. How can I help you?");
+        return "Hi I'm John. How can I help you?";
     }
     /**
      * Say goodbye to the user on program end.
@@ -62,11 +63,9 @@ public class Ui {
     public String findTasks(ArrayList<Integer> indices, TaskList list) {
         if (list.size() == 0) {
             return "You currently have no tasks. Try adding a task.";
-        }
-        else if (indices.size() == 0) {
+        } else if (indices.size() == 0) {
             return "There are no tasks matching your search.";
-        }
-        else {
+        } else {
             String res = "";
             res += "Here are the matching tasks in your list:\n";
             for (int i : indices) {

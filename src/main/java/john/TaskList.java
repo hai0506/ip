@@ -1,8 +1,8 @@
 package john;
 
-import john.tasks.Task;
-
 import java.util.ArrayList;
+
+import john.tasks.Task;
 
 /**
  * List of tasks managed by the chatbot.
