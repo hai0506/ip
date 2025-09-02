@@ -51,5 +51,12 @@ public class MainWindow extends AnchorPane {
                 DialogBox.getJohnDialog(response, johnImage)
         );
         userInput.clear();
+
+        if (response == "Bye!") {
+            javafx.animation.PauseTransition delay =
+                    new javafx.animation.PauseTransition(javafx.util.Duration.seconds(1));
+            delay.setOnFinished(event -> javafx.application.Platform.exit());
+            delay.play();
+        }
     }
 }
