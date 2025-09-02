@@ -2,7 +2,6 @@ package john;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.Scanner;
 
 import john.tasks.Deadline;
 import john.tasks.Event;
@@ -32,137 +31,136 @@ public class John {
     }
 
     /**
-     * Main program where the chatbot runs.
+     * Returns John's greeting on startup.
      */
-    public void run() {
-        this.ui.startUp();
-        Scanner sc = new Scanner(System.in);
-        String prompt = sc.nextLine();
-        Command command = Parser.parseCommand(prompt);
+    public String greet() {
+        return this.ui.greet();
+    }
 
-        // main loop
-        while (command != Command.BYE) {
-            try {
-                switch (command) {
-                case MARK: {
-                    int index = Integer.parseInt(prompt.split(" ")[1]);
-                    if (index > list.size() || index <= 0) {
-                        throw new JohnException("Task does not exist.");
-                    } else {
-                        list.get(index).mark();
-                        this.ui.markTask(list.get(index));
-                    }
-                    break;
+    /**
+     * Returns John's response to a user input.
+     */
+    public String getResponse(String prompt) {
+        Command command = Parser.parseCommand(prompt);
+        String res = "";
+        try {
+            switch (command) {
+            case MARK: {
+                int index = Integer.parseInt(prompt.split(" ")[1]);
+                if (index > list.size() || index <= 0) {
+                    throw new JohnException("Task does not exist.");
+                } else {
+                    list.get(index).mark();
+                    res = this.ui.markTask(list.get(index));
                 }
-                case UNMARK: {
-                    int index = Integer.parseInt(prompt.split(" ")[1]);
-                    if (index > list.size() || index <= 0) {
-                        throw new JohnException("Task does not exist.");
-                    } else {
-                        list.get(index).unMark();
-                        this.ui.unMarkTask(list.get(index));
-                    }
-                    break;
+                break;
+            }
+            case UNMARK: {
+                int index = Integer.parseInt(prompt.split(" ")[1]);
+                if (index > list.size() || index <= 0) {
+                    throw new JohnException("Task does not exist.");
+                } else {
+                    list.get(index).unMark();
+                    res = this.ui.unMarkTask(list.get(index));
                 }
-                case LIST: {
-                    this.ui.listTasks(this.list);
-                    break;
+                break;
+            }
+            case LIST: {
+                res = this.ui.listTasks(this.list);
+                break;
+            }
+            case TODO: {
+                String name = prompt.substring(4).strip();
+                if (name.equals("")) {
+                    throw new JohnException("The description cannot be empty.");
+                } else {
+                    ToDo todo = new ToDo(name);
+                    list.addTask(todo);
+                    res = this.ui.addTask(todo, list);
                 }
-                case TODO: {
-                    String name = prompt.substring(4).strip();
+                break;
+            }
+            case DEADLINE: {
+                if (!prompt.contains("/by")) {
+                    throw new JohnException("Please provide the deadline.");
+                } else {
+                    String[] split = prompt.substring(8).split("/by");
+                    String name = split[0].strip();
+                    String time = split[1].strip();
+
                     if (name.equals("")) {
                         throw new JohnException("The description cannot be empty.");
+                    } else if (time.equals("")) {
+                        throw new JohnException("The deadline cannot be empty.");
                     } else {
-                        ToDo todo = new ToDo(name);
-                        list.addTask(todo);
-                        this.ui.addTask(todo, list);
+                        Deadline deadline = new Deadline(name, LocalDate.parse(time));
+                        list.addTask(deadline);
+                        res = this.ui.addTask(deadline, list);
                     }
-                    break;
                 }
-                case DEADLINE: {
-                    if (!prompt.contains("/by")) {
-                        throw new JohnException("Please provide the deadline.");
-                    } else {
-                        String[] split = prompt.substring(8).split("/by");
-                        String name = split[0].strip();
-                        String time = split[1].strip();
-
-                        if (name.equals("")) {
-                            throw new JohnException("The description cannot be empty.");
-                        } else if (time.equals("")) {
-                            throw new JohnException("The deadline cannot be empty.");
-                        } else {
-                            Deadline deadline = new Deadline(name, LocalDate.parse(time));
-                            list.addTask(deadline);
-                            this.ui.addTask(deadline, list);
-                        }
-                    }
-                    break;
-                }
-                case EVENT: {
-                    if (!prompt.contains("/from") || !prompt.contains("/to")) {
-                        throw new JohnException("Please provide start and end dates.");
-                    } else {
-                        String[] split = prompt.substring(6).split("/from");
-                        String name = split[0].strip();
-                        String[] time = split[1].split("/to");
-                        String start = time[0].strip();
-                        String end = time[1].strip();
-
-                        if (name.equals("")) {
-                            throw new JohnException("The description cannot be empty.");
-                        } else if (start.equals("") || end.equals("")) {
-                            throw new JohnException("The start and end dates cannot be empty.");
-                        } else {
-                            Event event = new Event(name, LocalDate.parse(start), LocalDate.parse(end));
-                            list.addTask(event);
-                            this.ui.addTask(event, list);
-                        }
-                    }
-                    break;
-                }
-                case DELETE: {
-                    int index = Integer.parseInt(prompt.split(" ")[1]);
-                    if (index > list.size() || index <= 0) {
-                        throw new JohnException("Task does not exist.");
-                    } else {
-                        this.ui.deleteTask(list.deleteTask(index), list);
-                    }
-                    break;
-                }
-                case FIND: {
-                    String keyword = prompt.substring(4).strip();
-                    if (keyword.equals("")) {
-                        throw new JohnException("Please provide the search term.");
-                    }
-                    this.ui.findTasks(this.list.search(keyword), this.list);
-                    break;
-                }
-                default:
-                    throw new JohnException("Wrong command. Please try again.");
-                }
-            } catch (JohnException e) { // print errors
-                this.ui.displayJohnException(e);
-            } catch (IndexOutOfBoundsException e) { // when no time is provided after /by or /to
-                this.ui.displayJohnException(new JohnException("Please provide the required details for this task."));
-            } catch (DateTimeParseException e) {
-                this.ui.displayJohnException(
-                        new JohnException("Unable to parse the date. Please use format yyyy-mm-dd"));
+                break;
             }
-            prompt = sc.nextLine();
-            command = Parser.parseCommand(prompt);
+            case EVENT: {
+                if (!prompt.contains("/from") || !prompt.contains("/to")) {
+                    throw new JohnException("Please provide start and end dates.");
+                } else {
+                    String[] split = prompt.substring(6).split("/from");
+                    String name = split[0].strip();
+                    String[] time = split[1].split("/to");
+                    String start = time[0].strip();
+                    String end = time[1].strip();
+
+                    if (name.equals("")) {
+                        throw new JohnException("The description cannot be empty.");
+                    } else if (start.equals("") || end.equals("")) {
+                        throw new JohnException("The start and end dates cannot be empty.");
+                    } else {
+                        Event event = new Event(name, LocalDate.parse(start), LocalDate.parse(end));
+                        list.addTask(event);
+                        res = this.ui.addTask(event, list);
+                    }
+                }
+                break;
+            }
+            case DELETE: {
+                int index = Integer.parseInt(prompt.split(" ")[1]);
+                if (index > list.size() || index <= 0) {
+                    throw new JohnException("Task does not exist.");
+                } else {
+                    res = this.ui.deleteTask(list.deleteTask(index), list);
+                }
+                break;
+            }
+            case FIND: {
+                String keyword = prompt.substring(4).strip();
+                if (keyword.equals("")) {
+                    throw new JohnException("Please provide the search term.");
+                }
+                res = this.ui.findTasks(this.list.search(keyword), this.list);
+                break;
+            }
+            case BYE:
+                res = this.ui.endProgram();
+                break;
+            default:
+                throw new JohnException("Wrong command. Please try again.");
+            }
+        } catch (JohnException e) { // print errors
+            res = this.ui.displayJohnException(e);
+        } catch (IndexOutOfBoundsException e) { // when no time is provided after /by or /to
+            res = this.ui.displayJohnException(
+                    new JohnException("Please provide the required details for this task."));
+        } catch (DateTimeParseException e) {
+            res = this.ui.displayJohnException(
+                    new JohnException("Unable to parse the date. Please use format yyyy-mm-dd"));
         }
-        this.ui.endProgram();
 
         // save
         try {
             this.storage.save(this.list);
         } catch (JohnException e) {
-            this.ui.displayJohnException(e);
+            res = this.ui.displayJohnException(e);
         }
-    }
-
-    public static void main(String[] args) {
-        new John("data/tasks.txt").run();
+        return res;
     }
 }

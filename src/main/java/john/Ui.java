@@ -8,112 +8,77 @@ import java.util.ArrayList;
  */
 public class Ui {
     /**
-     * Prints a horizontal line.
-     */
-    private static void printHLine() {
-        System.out.println("---------------------------------------");
-    }
-    /**
      * Greets the user on program start.
      */
-    public void startUp() {
-        printHLine();
-        System.out.println("   Hi I'm John.");
-        System.out.println("   How can I help you?");
-        printHLine();
-        System.out.println();
+    public String greet() {
+        return("Hi I'm John. How can I help you?");
     }
     /**
      * Say goodbye to the user on program end.
      */
-    public void endProgram() {
-        printHLine();
-        System.out.println("   Bye!");
-        printHLine();
+    public String endProgram() {
+        return "Bye!";
     }
     /**
      * Displays the output of marking a task as done.
      */
-    public void markTask(Task task) {
-        printHLine();
-        System.out.println("   I've marked this task as done:");
-        System.out.println("   " + task);
-        printHLine();
-        System.out.println();
+    public String markTask(Task task) {
+        return "I've marked this task as done:\n" + task;
     }
     /**
      * Displays the output of unmarking a task as done.
      */
-    public void unMarkTask(Task task) {
-        printHLine();
-        System.out.println("   I've marked this task as not done yet:");
-        System.out.println("   " + task);
-        printHLine();
-        System.out.println();
+    public String unMarkTask(Task task) {
+        return "I've marked this task as not done yet:\n" + task;
     }
     /**
      * List the current tasks in the list.
      */
-    public void listTasks(TaskList list) {
-        printHLine();
+    public String listTasks(TaskList list) {
         if (list.size() == 0) {
-            System.out.println("   You currently have no tasks. Try adding a task.");
+            return "You currently have no tasks. Try adding a task.";
         }
+        String res = "";
         for (int i = 1; i <= list.size(); i++) {
-            System.out.println("   " + i + ". " + list.get(i));
+            res += "   " + i + ". " + list.get(i) + "\n";
         }
-        printHLine();
-        System.out.println();
+        return res;
     }
     /**
      * Displays the output of adding a task to the list.
      */
-    public void addTask(Task task, TaskList list) {
-        printHLine();
-        System.out.println("   I've added:");
-        System.out.println("   " + task);
-        System.out.println("   You now have " + list.size() + " tasks.");
-        printHLine();
-        System.out.println();
+    public String addTask(Task task, TaskList list) {
+        return "I've added:\n" + task + "\nYou now have " + list.size() + " tasks.";
     }
     /**
      * Displays the output of removing a task from the list.
      */
-    public void deleteTask(Task task, TaskList list) {
-        printHLine();
-        System.out.println("   I've removed this task:");
-        System.out.println("   " + task);
-        System.out.println("   You now have " + list.size() + " tasks.");
-        printHLine();
-        System.out.println();
+    public String deleteTask(Task task, TaskList list) {
+        return "I've removed:\n" + task + "\nYou now have " + list.size() + " tasks.";
     }
     /**
      * Display the list of tasks that matches the search.
      */
-    public void findTasks(ArrayList<Integer> indices, TaskList list) {
-        printHLine();
+    public String findTasks(ArrayList<Integer> indices, TaskList list) {
         if (list.size() == 0) {
-            System.out.println("   You currently have no tasks. Try adding a task.");
+            return "You currently have no tasks. Try adding a task.";
         }
         else if (indices.size() == 0) {
-            System.out.println("   There are no tasks matching your search.");
+            return "There are no tasks matching your search.";
         }
         else {
-            System.out.println("   Here are the matching tasks in your list:");
+            String res = "";
+            res += "Here are the matching tasks in your list:\n";
             for (int i : indices) {
-                System.out.println("   " + i + ". " + list.get(i));
+                res += i + ". " + list.get(i) + "\n";
             }
+            return res;
         }
-        printHLine();
-        System.out.println();
     }
     /**
      * Displays error messages.
      */
-    public void displayJohnException(JohnException e) {
-        printHLine();
-        System.out.println("   " + e.getMessage());
-        printHLine();
-        System.out.println();
+    public String displayJohnException(JohnException e) {
+        return e.getMessage();
     }
 }
