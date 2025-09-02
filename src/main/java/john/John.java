@@ -1,11 +1,13 @@
 package john;
 
-import john.tasks.Deadline;
-import john.tasks.Event;
-import john.tasks.ToDo;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+
+import john.tasks.Deadline;
+import john.tasks.Event;
+import john.tasks.ToDo;
+
 
 /**
  * The John chatbot task manager.
@@ -136,7 +138,7 @@ public class John {
                     this.ui.findTasks(this.list.search(keyword), this.list);
                     break;
                 }
-                case WRONG:
+                default:
                     throw new JohnException("Wrong command. Please try again.");
                 }
             } catch (JohnException e) { // print errors
@@ -144,7 +146,8 @@ public class John {
             } catch (IndexOutOfBoundsException e) { // when no time is provided after /by or /to
                 this.ui.displayJohnException(new JohnException("Please provide the required details for this task."));
             } catch (DateTimeParseException e) {
-                this.ui.displayJohnException(new JohnException("Unable to parse the date. Please use format yyyy-mm-dd"));
+                this.ui.displayJohnException(
+                        new JohnException("Unable to parse the date. Please use format yyyy-mm-dd"));
             }
             prompt = sc.nextLine();
             command = Parser.parseCommand(prompt);
