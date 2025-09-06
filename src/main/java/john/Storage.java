@@ -39,36 +39,31 @@ public class Storage {
             } catch (IOException e) {
                 throw new JohnException("Could not create save file.");
             }
-        } else {
-            try {
-                Scanner fileReader = new Scanner(dataFile);
-                while (fileReader.hasNext()) {
-                    String[] data = fileReader.nextLine().split(" \\| ");
-                    try {
-                        switch (data[0]) {
-                        case "T":
-                            list.addTask(new ToDo(data[2], data[1].equals("1")));
-                            break;
-                        case "D":
-                            list.addTask(new Deadline(data[2], LocalDate.parse(data[3]), data[1].equals("1")));
-                            break;
-                        case "E":
-                            list.addTask(new Event(data[2], LocalDate.parse(data[3]),
-                                    LocalDate.parse(data[4]), data[1].equals("1")));
-                            break;
-                        default:
-                            break;
-                        }
-                    } catch (DateTimeParseException e) {
-                        throw new JohnException("Unable to parse date from save file.");
-                    } catch (Exception e) {
-                        throw new JohnException("Cannot load from save file.");
-                    }
+        }
+        try {
+            Scanner fileReader = new Scanner(dataFile);
+            while (fileReader.hasNext()) {
+                String[] data = fileReader.nextLine().split(" \\| ");
+                switch (data[0]) {
+                case "T":
+                    list.addTask(new ToDo(data[2], data[1].equals("1")));
+                    break;
+                case "D":
+                    list.addTask(new Deadline(data[2], LocalDate.parse(data[3]), data[1].equals("1")));
+                    break;
+                case "E":
+                    list.addTask(new Event(data[2], LocalDate.parse(data[3]),
+                            LocalDate.parse(data[4]), data[1].equals("1")));
+                    break;
+                default:
+                    break;
                 }
-                fileReader.close();
-            } catch (FileNotFoundException e) {
-                throw new JohnException("Save file not found.");
             }
+            fileReader.close();
+        } catch (DateTimeParseException e) {
+            throw new JohnException("Unable to parse date from save file.");
+        } catch (FileNotFoundException e) {
+            throw new JohnException("Save file not found.");
         }
         return list;
     }
