@@ -25,7 +25,22 @@ public class Event extends Task {
         this.start = start;
         this.end = end;
     }
+    /**
+     * Constructor for event that creates a copy of another event.
+     */
+    public Event(Event other) {
+        super(other);
+        this.start = other.start;
+        this.end = other.end;
+    }
 
+    /**
+     * Create a deep copy of this task.
+     */
+    @Override
+    public Event copy() {
+        return new Event(this);
+    }
     /**
      * String representation of the event for displaying to user.
      */

@@ -16,7 +16,19 @@ public class ToDo extends Task {
     public ToDo(String name, boolean done) {
         super(name, done);
     }
-
+    /**
+     * Constructor for todo that creates a copy of another todo.
+     */
+    public ToDo(ToDo other) {
+        super(other);
+    }
+    /**
+     * Create a deep copy of this task.
+     */
+    @Override
+    public ToDo copy() {
+        return new ToDo(this);
+    }
     /**
      * String representation of the todo for displaying to user.
      */

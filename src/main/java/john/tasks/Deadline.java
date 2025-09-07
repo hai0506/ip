@@ -23,6 +23,20 @@ public class Deadline extends Task {
         this.deadline = deadline;
     }
     /**
+     * Constructor for deadline that creates a copy of another deadline.
+     */
+    public Deadline(Deadline other) {
+        super(other);
+        this.deadline = other.deadline;
+    }
+    /**
+     * Create a deep copy of this task.
+     */
+    @Override
+    public Deadline copy() {
+        return new Deadline(this);
+    }
+    /**
      * String representation of the deadline for displaying to user.
      */
     @Override

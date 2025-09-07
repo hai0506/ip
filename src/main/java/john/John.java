@@ -12,9 +12,10 @@ import john.tasks.ToDo;
  * The John chatbot task manager.
  */
 public class John {
-    private Storage storage;
+    private final Storage storage;
     private TaskList list;
-    private Ui ui;
+    private final Ui ui;
+    private TaskList lastListState;
 
     /**
      * Constructor for John.
@@ -42,7 +43,7 @@ public class John {
      */
     public String getResponse(String prompt) {
         Command command = Parser.parseCommand(prompt);
-        String res = "";
+        String res;
         try {
             switch (command) {
             case MARK: {
@@ -77,6 +78,10 @@ public class John {
                 res = find(prompt);
                 break;
             }
+            case UNDO: {
+                res = undo();
+                break;
+            }
             case BYE:
                 res = bye();
                 break;
@@ -99,7 +104,7 @@ public class John {
             res = this.ui.displayJohnException(e);
         }
 
-        assert res != "" : "Bot response should not be empty.";
+        assert !res.equals("") : "Bot response should not be empty.";
         return res;
     }
 
@@ -108,6 +113,7 @@ public class John {
         if (index > list.size() || index <= 0) {
             throw new JohnException("Task does not exist.");
         } else {
+            saveLastListState();
             list.get(index).mark();
             return this.ui.markTask(list.get(index));
         }
@@ -117,6 +123,7 @@ public class John {
         if (index > list.size() || index <= 0) {
             throw new JohnException("Task does not exist.");
         } else {
+            saveLastListState();
             list.get(index).unMark();
             return this.ui.unMarkTask(list.get(index));
         }
@@ -130,6 +137,7 @@ public class John {
             throw new JohnException("The description cannot be empty.");
         } else {
             ToDo todo = new ToDo(name);
+            saveLastListState();
             list.addTask(todo);
             return this.ui.addTask(todo, list);
         }
@@ -148,6 +156,7 @@ public class John {
                 throw new JohnException("The deadline cannot be empty.");
             } else {
                 Deadline deadline = new Deadline(name, LocalDate.parse(time));
+                saveLastListState();
                 list.addTask(deadline);
                 return this.ui.addTask(deadline, list);
             }
@@ -169,6 +178,7 @@ public class John {
                 throw new JohnException("The start and end dates cannot be empty.");
             } else {
                 Event event = new Event(name, LocalDate.parse(start), LocalDate.parse(end));
+                saveLastListState();
                 list.addTask(event);
                 return this.ui.addTask(event, list);
             }
@@ -179,6 +189,7 @@ public class John {
         if (index > list.size() || index <= 0) {
             throw new JohnException("Task does not exist.");
         } else {
+            saveLastListState();
             return this.ui.deleteTask(list.deleteTask(index), list);
         }
     }
@@ -188,6 +199,17 @@ public class John {
             throw new JohnException("Please provide the search term.");
         }
         return this.ui.findTasks(this.list.search(keyword), this.list);
+    }
+    private void saveLastListState() {
+        this.lastListState = new TaskList(this.list);
+    }
+    private String undo() throws JohnException {
+        if (this.lastListState == null) {
+            return "There is nothing to undo.";
+        }
+        this.list = this.lastListState;
+        this.lastListState = null;
+        return "I have undone your last change to the task list. Your tasks are now: \n" + list();
     }
     private String bye() throws JohnException {
         return this.ui.endProgram();
