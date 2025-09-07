@@ -20,6 +20,7 @@ public class TaskList {
      * Adds a task to the list.
      */
     public void addTask(Task task) {
+        assert task != null : "Task should not be null";
         list.add(task);
     }
     /**
