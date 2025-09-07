@@ -72,6 +72,7 @@ public class Storage {
      * Saves the data from the TaskList to the save file.
      */
     public void save(TaskList list) throws JohnException {
+        assert new File(this.filePath).exists() : "Save file does not exist.";
         try {
             FileWriter fileWriter = new FileWriter(this.filePath);
             for (int i = 1; i <= list.size(); i++) {

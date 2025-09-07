@@ -98,6 +98,8 @@ public class John {
         } catch (JohnException e) {
             res = this.ui.displayJohnException(e);
         }
+
+        assert res != "" : "Bot response should not be empty.";
         return res;
     }
 
