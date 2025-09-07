@@ -15,6 +15,15 @@ public class TaskList {
     public TaskList() {
         list = new ArrayList<>();
     }
+    /**
+     * Constructor for TaskList that creates a deep copy of another TaskList.
+     */
+    public TaskList(TaskList other) {
+        list = new ArrayList<>();
+        for (Task t : other.list) {
+            this.list.add(t.copy()); // copy each task
+        }
+    }
 
     /**
      * Adds a task to the list.

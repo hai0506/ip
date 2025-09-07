@@ -20,6 +20,13 @@ public abstract class Task {
         this.name = name;
         this.done = done;
     }
+    /**
+     * Constructor for task that creates a copy of another task.
+     */
+    protected Task(Task other) {
+        this.name = other.name;
+        this.done = other.done;
+    }
 
     /**
      * Mark a task as done.
@@ -40,6 +47,11 @@ public abstract class Task {
     public boolean nameContains(String keyword) {
         return this.name.contains(keyword);
     }
+
+    /**
+     * Create a deep copy of the task.
+     */
+    public abstract Task copy();
 
     /**
      * String representation of the task for displaying to user.

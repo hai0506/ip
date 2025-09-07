@@ -5,6 +5,7 @@ import java.time.format.DateTimeParseException;
 
 import john.tasks.Deadline;
 import john.tasks.Event;
+import john.tasks.Task;
 import john.tasks.ToDo;
 
 
@@ -12,9 +13,11 @@ import john.tasks.ToDo;
  * The John chatbot task manager.
  */
 public class John {
-    private Storage storage;
+    private final Storage storage;
     private TaskList list;
-    private Ui ui;
+    private final Ui ui;
+    private String lastPrompt;
+    private Task lastDeletedTask;
 
     /**
      * Constructor for John.
@@ -42,7 +45,7 @@ public class John {
      */
     public String getResponse(String prompt) {
         Command command = Parser.parseCommand(prompt);
-        String res = "";
+        String res;
         try {
             switch (command) {
             case MARK: {
@@ -77,6 +80,10 @@ public class John {
                 res = find(prompt);
                 break;
             }
+            case UNDO: {
+                res = undo();
+                break;
+            }
             case BYE:
                 res = bye();
                 break;
@@ -99,7 +106,9 @@ public class John {
             res = this.ui.displayJohnException(e);
         }
 
-        assert res != "" : "Bot response should not be empty.";
+        assert !res.equals("") : "Bot response should not be empty.";
+
+        this.lastPrompt = prompt;
         return res;
     }
 
@@ -179,6 +188,7 @@ public class John {
         if (index > list.size() || index <= 0) {
             throw new JohnException("Task does not exist.");
         } else {
+            this.lastDeletedTask = list.get(index);
             return this.ui.deleteTask(list.deleteTask(index), list);
         }
     }
@@ -188,6 +198,55 @@ public class John {
             throw new JohnException("Please provide the search term.");
         }
         return this.ui.findTasks(this.list.search(keyword), this.list);
+    }
+    private String undo() throws JohnException {
+        if (this.lastPrompt == null) {
+            return "There is nothing to undo.";
+        }
+        Command command = Parser.parseCommand(this.lastPrompt);
+        String res = "I've undone your last command.\n";
+        try {
+            switch (command) {
+            case MARK: {
+                res += unMark(this.lastPrompt);
+                break;
+            }
+            case UNMARK: {
+                res += mark(this.lastPrompt);
+                break;
+            }
+            case LIST:
+            case FIND:
+            case UNDO: {
+                res = "There is nothing to undo.";
+                break;
+            }
+            case TODO:
+            case DEADLINE:
+            case EVENT: {
+                res += delete("delete " + this.list.size());
+                break;
+            }
+            case DELETE: {
+                this.list.addTask(this.lastDeletedTask);
+                res += this.ui.addTask(this.lastDeletedTask, this.list);
+                break;
+            }
+            default:
+                throw new JohnException("Wrong command. Please try again.");
+            }
+        } catch (JohnException e) { // print errors
+            res = this.ui.displayJohnException(e);
+        }
+
+        try {
+            saveData();
+        } catch (JohnException e) {
+            res = this.ui.displayJohnException(e);
+        }
+
+        assert !res.equals(""): "Bot response should not be empty.";
+        return res;
     }
     private String bye() throws JohnException {
         return this.ui.endProgram();

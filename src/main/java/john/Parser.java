@@ -36,6 +36,9 @@ public class Parser {
         if (lower.equals("bye")) {
             return Command.BYE;
         }
+        if (lower.equals("undo")) {
+            return Command.UNDO;
+        }
         return Command.WRONG;
     }
 }
