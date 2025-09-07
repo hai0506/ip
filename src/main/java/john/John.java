@@ -5,7 +5,6 @@ import java.time.format.DateTimeParseException;
 
 import john.tasks.Deadline;
 import john.tasks.Event;
-import john.tasks.Task;
 import john.tasks.ToDo;
 
 
@@ -16,8 +15,7 @@ public class John {
     private final Storage storage;
     private TaskList list;
     private final Ui ui;
-    private String lastPrompt;
-    private Task lastDeletedTask;
+    private TaskList lastListState;
 
     /**
      * Constructor for John.
@@ -107,8 +105,6 @@ public class John {
         }
 
         assert !res.equals("") : "Bot response should not be empty.";
-
-        this.lastPrompt = prompt;
         return res;
     }
 
@@ -117,6 +113,7 @@ public class John {
         if (index > list.size() || index <= 0) {
             throw new JohnException("Task does not exist.");
         } else {
+            saveLastListState();
             list.get(index).mark();
             return this.ui.markTask(list.get(index));
         }
@@ -126,6 +123,7 @@ public class John {
         if (index > list.size() || index <= 0) {
             throw new JohnException("Task does not exist.");
         } else {
+            saveLastListState();
             list.get(index).unMark();
             return this.ui.unMarkTask(list.get(index));
         }
@@ -139,6 +137,7 @@ public class John {
             throw new JohnException("The description cannot be empty.");
         } else {
             ToDo todo = new ToDo(name);
+            saveLastListState();
             list.addTask(todo);
             return this.ui.addTask(todo, list);
         }
@@ -157,6 +156,7 @@ public class John {
                 throw new JohnException("The deadline cannot be empty.");
             } else {
                 Deadline deadline = new Deadline(name, LocalDate.parse(time));
+                saveLastListState();
                 list.addTask(deadline);
                 return this.ui.addTask(deadline, list);
             }
@@ -178,6 +178,7 @@ public class John {
                 throw new JohnException("The start and end dates cannot be empty.");
             } else {
                 Event event = new Event(name, LocalDate.parse(start), LocalDate.parse(end));
+                saveLastListState();
                 list.addTask(event);
                 return this.ui.addTask(event, list);
             }
@@ -188,7 +189,7 @@ public class John {
         if (index > list.size() || index <= 0) {
             throw new JohnException("Task does not exist.");
         } else {
-            this.lastDeletedTask = list.get(index);
+            saveLastListState();
             return this.ui.deleteTask(list.deleteTask(index), list);
         }
     }
@@ -199,54 +200,16 @@ public class John {
         }
         return this.ui.findTasks(this.list.search(keyword), this.list);
     }
+    private void saveLastListState() {
+        this.lastListState = new TaskList(this.list);
+    }
     private String undo() throws JohnException {
-        if (this.lastPrompt == null) {
+        if (this.lastListState == null) {
             return "There is nothing to undo.";
         }
-        Command command = Parser.parseCommand(this.lastPrompt);
-        String res = "I've undone your last command.\n";
-        try {
-            switch (command) {
-            case MARK: {
-                res += unMark(this.lastPrompt);
-                break;
-            }
-            case UNMARK: {
-                res += mark(this.lastPrompt);
-                break;
-            }
-            case LIST:
-            case FIND:
-            case UNDO: {
-                res = "There is nothing to undo.";
-                break;
-            }
-            case TODO:
-            case DEADLINE:
-            case EVENT: {
-                res += delete("delete " + this.list.size());
-                break;
-            }
-            case DELETE: {
-                this.list.addTask(this.lastDeletedTask);
-                res += this.ui.addTask(this.lastDeletedTask, this.list);
-                break;
-            }
-            default:
-                throw new JohnException("Wrong command. Please try again.");
-            }
-        } catch (JohnException e) { // print errors
-            res = this.ui.displayJohnException(e);
-        }
-
-        try {
-            saveData();
-        } catch (JohnException e) {
-            res = this.ui.displayJohnException(e);
-        }
-
-        assert !res.equals(""): "Bot response should not be empty.";
-        return res;
+        this.list = this.lastListState;
+        this.lastListState = null;
+        return "I have undone your last change to the task list. Your tasks are now: \n" + list();
     }
     private String bye() throws JohnException {
         return this.ui.endProgram();
