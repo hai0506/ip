@@ -12,6 +12,13 @@ import john.tasks.ToDo;
  * The John chatbot task manager.
  */
 public class John {
+    // ChatGPT suggested to define the following constants to avoid the use of magic numbers in the
+    // prompt handling below.
+    private static final int DEADLINE_COMMAND_OFFSET = 8; // "deadline".length()
+    private static final int EVENT_COMMAND_OFFSET = 6; // "event".length()
+    private static final int TODO_COMMAND_OFFSET = 4; // "todo".length()
+    private static final int FIND_COMMAND_OFFSET = 4; // "find".length()
+
     private final Storage storage;
     private TaskList list;
     private final Ui ui;
@@ -118,6 +125,7 @@ public class John {
             return this.ui.markTask(list.get(index));
         }
     }
+
     private String unMark(String prompt) throws JohnException {
         int index = Integer.parseInt(prompt.split(" ")[1]);
         if (index > list.size() || index <= 0) {
@@ -128,11 +136,13 @@ public class John {
             return this.ui.unMarkTask(list.get(index));
         }
     }
+
     private String list() throws JohnException {
         return this.ui.listTasks(this.list);
     }
+
     private String createToDo(String prompt) throws JohnException {
-        String name = prompt.substring(4).strip();
+        String name = prompt.substring(TODO_COMMAND_OFFSET).strip();
         if (name.equals("")) {
             throw new JohnException("The description cannot be empty.");
         } else {
@@ -142,11 +152,12 @@ public class John {
             return this.ui.addTask(todo, list);
         }
     }
+
     private String createDeadline(String prompt) throws JohnException {
         if (!prompt.contains("/by")) {
             throw new JohnException("Please provide the deadline.");
         } else {
-            String[] split = prompt.substring(8).split("/by");
+            String[] split = prompt.substring(DEADLINE_COMMAND_OFFSET).split("/by");
             String name = split[0].strip();
             String time = split[1].strip();
 
@@ -162,11 +173,12 @@ public class John {
             }
         }
     }
+
     private String createEvent(String prompt) throws JohnException {
         if (!prompt.contains("/from") || !prompt.contains("/to")) {
             throw new JohnException("Please provide start and end dates.");
         } else {
-            String[] split = prompt.substring(6).split("/from");
+            String[] split = prompt.substring(EVENT_COMMAND_OFFSET).split("/from");
             String name = split[0].strip();
             String[] time = split[1].split("/to");
             String start = time[0].strip();
@@ -184,6 +196,7 @@ public class John {
             }
         }
     }
+
     private String delete(String prompt) throws JohnException {
         int index = Integer.parseInt(prompt.split(" ")[1]);
         if (index > list.size() || index <= 0) {
@@ -193,16 +206,19 @@ public class John {
             return this.ui.deleteTask(list.deleteTask(index), list);
         }
     }
+
     private String find(String prompt) throws JohnException {
-        String keyword = prompt.substring(4).strip();
+        String keyword = prompt.substring(FIND_COMMAND_OFFSET).strip();
         if (keyword.equals("")) {
             throw new JohnException("Please provide the search term.");
         }
         return this.ui.findTasks(this.list.search(keyword), this.list);
     }
+
     private void saveLastListState() {
         this.lastListState = new TaskList(this.list);
     }
+
     private String undo() throws JohnException {
         if (this.lastListState == null) {
             return "There is nothing to undo.";
@@ -211,9 +227,11 @@ public class John {
         this.lastListState = null;
         return "I have undone your last change to the task list. Your tasks are now: \n" + list();
     }
+
     private String bye() throws JohnException {
         return this.ui.endProgram();
     }
+
     private void saveData() throws JohnException {
         this.storage.save(this.list);
     }

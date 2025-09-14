@@ -30,8 +30,9 @@ public class Storage {
     public TaskList load() throws JohnException {
         TaskList list = new TaskList();
         File dataFile = new File(this.filePath);
-        if (!dataFile.getParentFile().exists()) {
-            dataFile.getParentFile().mkdirs();
+        File parentDir = dataFile.getParentFile();
+        if (parentDir != null && !parentDir.exists()) {
+            parentDir.mkdirs();
         }
         if (!dataFile.exists()) {
             try {
@@ -56,7 +57,8 @@ public class Storage {
                             LocalDate.parse(data[4]), data[1].equals("1")));
                     break;
                 default:
-                    break;
+                    // ChatGPT suggested to throw an exception here instead of doing nothing
+                    throw new JohnException("Unrecognized task type in save file: " + data[0]);
                 }
             }
             fileReader.close();
