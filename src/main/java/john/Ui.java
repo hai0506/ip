@@ -15,7 +15,7 @@ public class Ui {
         return "Hi I'm John. How can I help you?";
     }
     /**
-     * Say goodbye to the user on program end.
+     * Says goodbye to the user on program end.
      */
     public String endProgram() {
         return "Bye!";
@@ -33,7 +33,7 @@ public class Ui {
         return "I've marked this task as not done yet:\n" + task;
     }
     /**
-     * List the current tasks in the list.
+     * Lists the current tasks in the list.
      */
     public String listTasks(TaskList list) {
         if (list.size() == 0) {
@@ -58,7 +58,7 @@ public class Ui {
         return "I've removed:\n" + task + "\nYou now have " + list.size() + " tasks.";
     }
     /**
-     * Display the list of tasks that matches the search.
+     * Displays the list of tasks that matches the search.
      */
     public String findTasks(ArrayList<Integer> indices, TaskList list) {
         if (list.size() == 0) {

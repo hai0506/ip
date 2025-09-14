@@ -35,7 +35,7 @@ public class Event extends Task {
     }
 
     /**
-     * Create a deep copy of this task.
+     * Creates a deep copy of this task.
      */
     @Override
     public Event copy() {

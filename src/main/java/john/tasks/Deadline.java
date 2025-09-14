@@ -30,7 +30,7 @@ public class Deadline extends Task {
         this.deadline = other.deadline;
     }
     /**
-     * Create a deep copy of this task.
+     * Creates a deep copy of this task.
      */
     @Override
     public Deadline copy() {

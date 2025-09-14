@@ -23,7 +23,7 @@ public class ToDo extends Task {
         super(other);
     }
     /**
-     * Create a deep copy of this task.
+     * Creates a deep copy of this task.
      */
     @Override
     public ToDo copy() {

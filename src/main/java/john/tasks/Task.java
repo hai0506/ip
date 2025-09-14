@@ -5,51 +5,51 @@ package john.tasks;
  */
 public abstract class Task {
     private String name;
-    private boolean done;
+    private boolean isDone;
     /**
      * Constructor for task.
      */
     public Task(String name) {
         this.name = name;
-        this.done = false;
+        this.isDone = false;
     }
     /**
      * Constructor for task with specified mark as done.
      */
     public Task(String name, boolean done) {
         this.name = name;
-        this.done = done;
+        this.isDone = done;
     }
     /**
      * Constructor for task that creates a copy of another task.
      */
     protected Task(Task other) {
         this.name = other.name;
-        this.done = other.done;
+        this.isDone = other.isDone;
     }
 
     /**
-     * Mark a task as done.
+     * Marks a task as done.
      */
     public void mark() {
-        this.done = true;
+        this.isDone = true;
     }
     /**
-     * Unmark a task as done.
+     * Unmarks a task as done.
      */
     public void unMark() {
-        this.done = false;
+        this.isDone = false;
     }
 
     /**
-     * Check whether the keyword is in the task name.
+     * Checks whether the keyword is in the task name.
      */
     public boolean nameContains(String keyword) {
         return this.name.contains(keyword);
     }
 
     /**
-     * Create a deep copy of the task.
+     * Creates a deep copy of the task.
      */
     public abstract Task copy();
 
@@ -58,7 +58,7 @@ public abstract class Task {
      */
     @Override
     public String toString() {
-        if (this.done) {
+        if (this.isDone) {
             return "[X] " + name;
         }
         return "[] " + name;
@@ -67,7 +67,7 @@ public abstract class Task {
      * String representation of the task for saving in the save file.
      */
     public String writeString() {
-        int doneInt = done ? 1 : 0;
+        int doneInt = isDone ? 1 : 0;
         return doneInt + " | " + name;
     }
 }
